@@ -5,4 +5,14 @@
     <string name="text_enter">Войти</string>
     <string name="text_registr">Зарегистрироваться</string>
     <string name="Search_title">Search</string>
+    <string name="title_activity_test">test</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="Books_list">Список книг</string>
+    <string name="test_list">Список тестов</string>
+    <string name="download_book_string">Загруженные книги</string>
 </resources>
