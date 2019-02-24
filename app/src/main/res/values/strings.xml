@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AndroidApp-Client</string>
+    <string name="text_login">Введите ваш логин</string>
+    <string name="text_password">Введите ваш пароль</string>
+    <string name="text_enter">Войти</string>
+    <string name="text_registr">Зарегистрироваться</string>
+</resources>
