@@ -8,27 +8,25 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/my_background">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="15pt">
 
-            <TextView
-                android:id="@+id/textview_login"
-                android:layout_width="wrap_content"
+            <Button
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Test"
-                android:textSize="20pt" />
+                android:text="Книги"/>
 
-            <TextView
-                android:id="@+id/textview_password"
-                android:layout_width="wrap_content"
+            <Button
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Test"
-                android:textSize="20pt" />
+                android:text="Тесты"/>
         </LinearLayout>
     </FrameLayout>
 </android.support.constraint.ConstraintLayout>

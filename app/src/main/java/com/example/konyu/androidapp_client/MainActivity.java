@@ -42,8 +42,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public final static String EXTRA_login = "EXTRA_login";
-    public final static String EXTRA_password = "EXTRA_password";
+    public final static String EXTRA_Token = "EXTRA_Token";
 
     private final String URL = "http://10.0.2.2:8000";
 
@@ -62,15 +61,19 @@ public class MainActivity extends AppCompatActivity {
         EditText editText_password = (EditText) findViewById(R.id.editText_password);
         String string_password = editText_password.getText().toString();
 
-        Call<Auth> call = userClient.login(new Login(string_login,string_password));
+        Call<Auth> call = userClient.login(new Login(string_login, string_password));
 
         call.enqueue(new Callback<Auth>() {
             @Override
             public void onResponse(Call<Auth> call, Response<Auth> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     Toast.makeText(MainActivity.this, response.body().getToken(), Toast.LENGTH_LONG).show();
-                }
-                else{
+
+                    Intent intent = new Intent(MainActivity.this, BooksActivity.class);
+                    intent.putExtra(EXTRA_Token, response.body().getToken());
+                    startActivity(intent);
+                    finish();
+                } else {
                     Toast.makeText(MainActivity.this, "not correct =(", Toast.LENGTH_LONG).show();
                 }
             }
@@ -82,11 +85,4 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 }
-
-//        Intent intent = new Intent(this, BooksActivity.class);
-//        intent.putExtra(EXTRA_login, string_login);
-//        intent.putExtra(EXTRA_password, string_password);
-//        startActivity(intent);
-//    }
-
 
