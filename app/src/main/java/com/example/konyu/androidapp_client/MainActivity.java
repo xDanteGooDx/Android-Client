@@ -67,8 +67,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Auth> call, Response<Auth> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(MainActivity.this, response.body().getToken(), Toast.LENGTH_LONG).show();
-
                     Intent intent = new Intent(MainActivity.this, BooksActivity.class);
                     intent.putExtra(EXTRA_Token, response.body().getToken());
                     startActivity(intent);
