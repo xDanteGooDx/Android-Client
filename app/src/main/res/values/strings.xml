@@ -15,4 +15,5 @@
     <string name="Books_list">Список книг</string>
     <string name="test_list">Список тестов</string>
     <string name="download_book_string">Загруженные книги</string>
+    <string name="Save_title_menu">Сохранить</string>
 </resources>

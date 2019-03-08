@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +24,8 @@ import com.squareup.picasso.Picasso;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import model.Book;
@@ -30,10 +35,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class BooksActivity extends AppCompatActivity {
+public class BooksActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private BookAdapter bookAdapter;
@@ -50,6 +56,7 @@ public class BooksActivity extends AppCompatActivity {
 
     UserClient userClient = retrofit.create(UserClient.class);
 
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,30 +66,24 @@ public class BooksActivity extends AppCompatActivity {
         //------
         Intent intent = getIntent();
         String Token = intent.getStringExtra(MainActivity.EXTRA_Token);
+        token = Token;
         list_books = new ArrayList<>();
         list_books.add(new Book(1, "Титл", 1, "http://wiki.kubg.edu.ua/images/d/d7/F11.jpg"));
         initToolbar();
         initNavigationView();
-
-//        TextView test_author = findViewById(R.id.test_author_book);
-//        TextView test_title = findViewById(R.id.test_title_book);
-//        ImageView test_icon = findViewById(R.id.test_icon_book);
-//
-//        test_author.setText(Integer.toString(list_books.get(0).getAuthor()));
-//        test_title.setText(list_books.get(0).getTitle_book());
-//        new DownloadImageTask(test_icon).execute(list_books.get(0).getIcon_book());
-//        Picasso.get().load(list_books.get(0).getIcon_book()).into(test_icon);
         recyclerView = (RecyclerView) findViewById(R.id.book_recyclerview);
         download_books(Token);
 
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        bookAdapter = new BookAdapter((ArrayList<Book>) list_books, "token " + Token);
+        bookAdapter = new BookAdapter((ArrayList<Book>) list_books, Token);
         recyclerView.setAdapter(bookAdapter);
     }
 
     private void initNavigationView() {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.navigation);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void initToolbar() {
@@ -105,12 +106,10 @@ public class BooksActivity extends AppCompatActivity {
             public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
                 if (response.isSuccessful()) {
                     list_books = new ArrayList<Book>();
-//                    list_books.clear();
                     if (response.body() != null) {
                         list_books.addAll(response.body());
-                        recyclerView.setAdapter(new BookAdapter(list_books, "token " + token));
-//                        recyclerView.getAdapter().notifyDataSetChanged();
-//                        bookAdapter.notifyDataSetChanged();
+                        Collections.reverse(list_books);
+                        recyclerView.setAdapter(new BookAdapter(list_books, token));
                     }
                 } else {
                     Toast.makeText(BooksActivity.this, "Не удалось загрузить книги", Toast.LENGTH_LONG).show();
@@ -122,5 +121,23 @@ public class BooksActivity extends AppCompatActivity {
                 Toast.makeText(BooksActivity.this, "Не удалось загрузить книги", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        int id = menuItem.getItemId();
+        switch (id){
+            case R.id.menu_item_books:
+                Intent intent = new Intent(this, BooksActivity.class);
+                intent.putExtra(MainActivity.EXTRA_Token, token);
+                startActivity(intent);
+                finish();
+                break;
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
