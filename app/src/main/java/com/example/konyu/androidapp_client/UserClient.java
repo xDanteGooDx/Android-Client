@@ -7,6 +7,8 @@ import model.Auth_header;
 import model.Book;
 import model.FullText;
 import model.Login;
+import model.Test;
+import model.Text;
 import model.User;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -33,4 +35,10 @@ public interface UserClient {
 
     @GET("api/getheader/{num}")
     Call<List<model.Header>> getHeader(@Header("Authorization") String auth_token, @Path("num") int num);
+
+    @GET("api/gettext/{num}")
+    Call<List<Text>> getText(@Header("Authorization") String auth_token, @Path("num") int num);
+
+    @GET("api/test")
+    Call<List<Test>> getTests(@Header("Authorization") String auth_token);
 }

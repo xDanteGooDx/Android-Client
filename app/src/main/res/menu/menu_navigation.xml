@@ -4,15 +4,15 @@
         android:id="@+id/menu_item_books"
         android:icon="@drawable/book_open_page_variant"
         android:orderInCategory="1"
-        android:title="@string/Books_list" />
+        android:title="@string/Books_list"/>
     <item
         android:id="@+id/menu_item_tests"
         android:icon="@drawable/format_list_bulleted_type"
         android:orderInCategory="1"
-        android:title="@string/test_list" />
+        android:title="@string/test_list"/>
     <item
         android:id="@+id/menu_item_save_books"
         android:icon="@drawable/download_multiple"
         android:orderInCategory="1"
-        android:title="@string/download_book_string" />
+        android:title="@string/download_book_string"/>
 </menu>
