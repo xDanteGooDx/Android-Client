@@ -1,5 +1,6 @@
 package com.example.konyu.androidapp_client;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -51,7 +52,13 @@ class TestAdapter extends RecyclerView.Adapter<TestAdapter.TestViewHolder> {
 
         @Override
         public void onClick(View v) {
-
+            Intent intent = new Intent(v.getContext(), Test_Review.class);
+            intent.putExtra(MainActivity.EXTRA_Token, token);
+            intent.putExtra(Test_Review.EXTRA_TEST_ID, test_Item.getId());
+            intent.putExtra(Test_Review.EXTRA_TEST_NAME, test_Item.getTest_title());
+            intent.putExtra(Test_Review.EXTRA_TEST_AUTHOR, test_Item.getAuthor());
+            intent.putExtra(Test_Review.EXTRA_TEST_ABOUT,test_Item.getAbout());
+            v.getContext().startActivity(intent);
         }
     }
 
