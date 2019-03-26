@@ -29,16 +29,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
-    private final String URL = "http://10.0.2.2:8000";
-
-    private Retrofit.Builder builder = new Retrofit.Builder()
-            .baseUrl(URL)
-            .addConverterFactory(GsonConverterFactory.create());
-
-    private Retrofit retrofit = builder.build();
-
-    UserClient userClient = retrofit.create(UserClient.class);
-
     List<Book> books;
     String token;
 
@@ -85,7 +75,7 @@ class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
     public void onBindViewHolder(@NonNull final BookAdapter.BookViewHolder bookViewHolder, int i) {
         bookViewHolder.setBook_Item(books.get(i));
         bookViewHolder.title_view.setText(books.get(i).getTitle_book());
-        Call<User> call = userClient.getUsers("token " + token, books.get(i).getAuthor());
+        Call<User> call = MainActivity.userClient.getUsers("token " + token, books.get(i).getAuthor());
 
         call.enqueue(new Callback<User>() {
             @Override

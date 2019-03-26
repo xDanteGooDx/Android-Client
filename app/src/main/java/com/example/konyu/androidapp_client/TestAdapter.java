@@ -16,16 +16,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 class TestAdapter extends RecyclerView.Adapter<TestAdapter.TestViewHolder> {
-    private final String URL = "http://10.0.2.2:8000";
-
-    private Retrofit.Builder builder = new Retrofit.Builder()
-            .baseUrl(URL)
-            .addConverterFactory(GsonConverterFactory.create());
-
-    private Retrofit retrofit = builder.build();
-
-    UserClient userClient = retrofit.create(UserClient.class);
-
     List<Test> tests;
     String token;
 

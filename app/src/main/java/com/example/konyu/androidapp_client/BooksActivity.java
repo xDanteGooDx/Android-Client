@@ -10,6 +10,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,18 +48,9 @@ public class BooksActivity extends AppCompatActivity implements NavigationView.O
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private BookAdapter bookAdapter;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     private List<Book> list_books;
-
-    private final String URL = "http://10.0.2.2:8000";
-
-    private Retrofit.Builder builder = new Retrofit.Builder()
-            .baseUrl(URL)
-            .addConverterFactory(GsonConverterFactory.create());
-
-    private Retrofit retrofit = builder.build();
-
-    UserClient userClient = retrofit.create(UserClient.class);
 
     private String token;
 
@@ -71,12 +64,10 @@ public class BooksActivity extends AppCompatActivity implements NavigationView.O
         String Token = intent.getStringExtra(MainActivity.EXTRA_Token);
         token = Token;
         list_books = new ArrayList<>();
-        list_books.add(new Book(1, "Титл", 1, "http://wiki.kubg.edu.ua/images/d/d7/F11.jpg"));
         initToolbar();
         initNavigationView();
         recyclerView = (RecyclerView) findViewById(R.id.book_recyclerview);
         download_books(Token);
-
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         bookAdapter = new BookAdapter((ArrayList<Book>) list_books, Token);
@@ -110,7 +101,7 @@ public class BooksActivity extends AppCompatActivity implements NavigationView.O
     }
 
     private void download_books(final String token) {
-        Call<List<Book>> call = userClient.getBooks("token " + token);
+        Call<List<Book>> call = MainActivity.userClient.getBooks("token " + token);
 
         call.enqueue(new Callback<List<Book>>() {
             @Override

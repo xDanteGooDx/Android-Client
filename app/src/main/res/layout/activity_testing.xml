@@ -13,6 +13,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="7pt"
+        android:background="@color/mainBackground"
         android:orientation="vertical">
 
         <android.support.design.widget.AppBarLayout
@@ -28,15 +30,48 @@
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/layout_bg"
+                android:padding="2pt"
+                android:text="@string/back_btn_test" />
+
+            <Button
+                android:id="@+id/next_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@drawable/layout_bg"
+                android:padding="2pt"
+                android:text="@string/next_btn_test" />
+
+            <Button
+                android:id="@+id/finish_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/layout_bg"
+                android:padding="2pt"
+                android:text="@string/finish_btn_test" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/question_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Question"
-            android:textSize="10pt"/>
+            android:textSize="10pt" />
 
         <android.support.v7.widget.RecyclerView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:id="@+id/answer_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
         </android.support.v7.widget.RecyclerView>
@@ -49,8 +84,5 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/navigation_header"
-        app:menu="@menu/menu_navigation">
-
-
-    </android.support.design.widget.NavigationView>
+        app:menu="@menu/menu_navigation" />
 </android.support.v4.widget.DrawerLayout>

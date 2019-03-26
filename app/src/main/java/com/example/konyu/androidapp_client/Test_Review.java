@@ -1,6 +1,10 @@
 package com.example.konyu.androidapp_client;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -11,6 +15,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.NavigableMap;
+
 import model.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,7 +24,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Test_Review extends AppCompatActivity {
+public class Test_Review extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static final String EXTRA_TEST_ID = "EXTRA_TEST_ID";
     public static final String EXTRA_TEST_NAME = "EXTRA_TEST_NAME";
     public static final String EXTRA_TEST_AUTHOR = "EXTRA_TEST_AUTHOR";
@@ -28,16 +34,6 @@ public class Test_Review extends AppCompatActivity {
     Button startBtn;
     Toolbar toolbar;
     String token;
-
-    private final String URL = "http://10.0.2.2:8000";
-
-    private Retrofit.Builder builder = new Retrofit.Builder()
-            .baseUrl(URL)
-            .addConverterFactory(GsonConverterFactory.create());
-
-    private Retrofit retrofit = builder.build();
-
-    UserClient userClient = retrofit.create(UserClient.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +47,9 @@ public class Test_Review extends AppCompatActivity {
         int author_test = intent.getIntExtra(EXTRA_TEST_AUTHOR, 0);
         String about_test = intent.getStringExtra(EXTRA_TEST_ABOUT);
         token = intent.getStringExtra(MainActivity.EXTRA_Token);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
+        navigationView.setNavigationItemSelectedListener(this);
 
         initView();
 
@@ -70,12 +69,12 @@ public class Test_Review extends AppCompatActivity {
         nameView.setText(name_test);
         aboutView.setText(about_test);
 
-        Call<User> call = userClient.getUsers("token " + token, author_test);
+        Call<User> call = MainActivity.userClient.getUsers("token " + token, author_test);
 
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     authorView.setText("@" + response.body().getUsername());
                 }
             }
@@ -97,5 +96,28 @@ public class Test_Review extends AppCompatActivity {
     private void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Тест");
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        int id = menuItem.getItemId();
+        switch (id) {
+            case R.id.menu_item_books:
+                Intent intent = new Intent(this, BooksActivity.class);
+                intent.putExtra(MainActivity.EXTRA_Token, token);
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.menu_item_tests:
+                Intent intent1 = new Intent(this, TestActivity.class);
+                intent1.putExtra(MainActivity.EXTRA_Token, token);
+                startActivity(intent1);
+                finish();
+                break;
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

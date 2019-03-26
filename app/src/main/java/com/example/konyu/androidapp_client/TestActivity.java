@@ -34,16 +34,6 @@ public class TestActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView;
     TestAdapter testAdapter;
 
-    private final String URL = "http://10.0.2.2:8000";
-
-    private Retrofit.Builder builder = new Retrofit.Builder()
-            .baseUrl(URL)
-            .addConverterFactory(GsonConverterFactory.create());
-
-    private Retrofit retrofit = builder.build();
-
-    UserClient userClient = retrofit.create(UserClient.class);
-
     private String token;
     private List<Test> list_tests;
 
@@ -69,7 +59,7 @@ public class TestActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void download_tests(final String token) {
-        Call<List<Test>> call = userClient.getTests("token " + token);
+        Call<List<Test>> call = MainActivity.userClient.getTests("token " + token);
 
         call.enqueue(new Callback<List<Test>>() {
             @Override

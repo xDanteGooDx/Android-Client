@@ -8,8 +8,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.concurrent.TimeUnit;
+
 import model.Auth;
 import model.Login;
+import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,17 +46,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public final static String EXTRA_Token = "EXTRA_Token";
+    public static final String EXTRA_Token = "EXTRA_Token";
 
-    private final String URL = "http://10.0.2.2:8000";
+    public final static String URL = "http://10.0.2.2:8000";
 
-    private Retrofit.Builder builder = new Retrofit.Builder()
+    public static OkHttpClient okHttpClient = new OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build();
+
+    public static Retrofit.Builder builder = new Retrofit.Builder()
             .baseUrl(URL)
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create());
 
-    private Retrofit retrofit = builder.build();
+    public static Retrofit retrofit = builder.build();
 
-    UserClient userClient = retrofit.create(UserClient.class);
+    public static UserClient userClient = retrofit.create(UserClient.class);
 
     public void signin() {
         EditText editText_login = (EditText) findViewById(R.id.editText_login);
