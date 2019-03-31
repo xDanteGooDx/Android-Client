@@ -246,6 +246,11 @@ public class Testing extends AppCompatActivity implements NavigationView.OnNavig
                 startActivity(intent1);
                 finish();
                 break;
+            case R.id.menu_item_save_books:
+                Intent intent2 = new Intent(this, SavedBooksActivity.class);
+                startActivity(intent2);
+                finish();
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

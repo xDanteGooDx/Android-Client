@@ -145,6 +145,11 @@ public class Book_Review extends AppCompatActivity implements NavigationView.OnN
                 startActivity(intent1);
                 finish();
                 break;
+            case R.id.menu_item_save_books:
+                Intent intent2 = new Intent(this, SavedBooksActivity.class);
+                startActivity(intent2);
+                finish();
+                break;
             case 1:
                 webView.loadUrl(fulltext_url);
                 break;
@@ -190,7 +195,7 @@ public class Book_Review extends AppCompatActivity implements NavigationView.OnN
                                 + " WHERE " + DBHelper.BOOK_ID + " = " + id_book;
                         Cursor cursor = db.rawQuery(query, null);
 
-                        if(cursor.moveToFirst()){
+                        if (cursor.moveToFirst()) {
                             Toast.makeText(Book_Review.this, "Книга уже скачена", Toast.LENGTH_SHORT).show();
                             break;
                         }

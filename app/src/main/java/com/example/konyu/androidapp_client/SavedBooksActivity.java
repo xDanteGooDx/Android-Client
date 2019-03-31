@@ -13,74 +13,37 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import model.Book;
-import model.Test;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-public class TestActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
-    Toolbar toolbar;
-    RecyclerView recyclerView;
-    DrawerLayout drawerLayout;
+public class SavedBooksActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
     NavigationView navigationView;
-    TestAdapter testAdapter;
-
-    private String token;
-    private List<Test> list_tests;
+    DrawerLayout drawerLayout;
+    Toolbar toolbar;
+    SavedBooksAdapter savedBooksAdapter;
+    RecyclerView recyclerView;
+    String token;
+    List<Book> list_books;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppDefault);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.books_layout);
 
         Intent intent = getIntent();
         String Token = intent.getStringExtra(MainActivity.EXTRA_Token);
         token = Token;
-
-        list_tests = new ArrayList<>();
+        list_books = new ArrayList<>();
         initToolbar();
         initNavigationView();
-        recyclerView = (RecyclerView) findViewById(R.id.test_recyclerview);
-        download_tests(Token);
-
+        recyclerView = (RecyclerView) findViewById(R.id.book_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        testAdapter = new TestAdapter((ArrayList<Test>) list_tests, Token);
-        recyclerView.setAdapter(testAdapter);
-    }
-
-    private void download_tests(final String token) {
-        Call<List<Test>> call = MainActivity.userClient.getTests("token " + token);
-
-        call.enqueue(new Callback<List<Test>>() {
-            @Override
-            public void onResponse(Call<List<Test>> call, Response<List<Test>> response) {
-                if (response.isSuccessful()) {
-                    list_tests = new ArrayList<>();
-                    if (response.body() != null) {
-                        list_tests.addAll(response.body());
-                        Collections.reverse(list_tests);
-                        recyclerView.setAdapter(new TestAdapter(list_tests, token));
-                    }
-                } else {
-                    Toast.makeText(TestActivity.this, "Не удалось загрузить тесты", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Test>> call, Throwable t) {
-                Toast.makeText(TestActivity.this, "Не удалось загрузить тесты", Toast.LENGTH_LONG).show();
-            }
-        });
+        savedBooksAdapter = new SavedBooksAdapter(this);
+        recyclerView.setAdapter(savedBooksAdapter);
     }
 
     private void initNavigationView() {
@@ -91,7 +54,7 @@ public class TestActivity extends AppCompatActivity implements NavigationView.On
 
     private void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Тесты");
+        toolbar.setTitle("Сохраненные книги");
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -140,16 +103,16 @@ public class TestActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean onQueryTextChange(String s) {
-        if (s.length() == 0 && recyclerView.getAdapter().getItemCount() != list_tests.size()) {
-            recyclerView.setAdapter(new TestAdapter(list_tests, token));
+    public boolean onQueryTextChange(String newText) {
+        if (newText.length() == 0 && recyclerView.getAdapter().getItemCount() != list_books.size()) {
+            recyclerView.setAdapter(new BookAdapter(list_books, token));
         } else {
-            List<Test> newListOfBook = new ArrayList<>();
-            for (int i = 0; i < list_tests.size(); i++) {
-                if (list_tests.get(i).getTest_title().indexOf(s) != -1) {
-                    newListOfBook.add(list_tests.get(i));
+            List<Book> newListOfBook = new ArrayList<>();
+            for (int i = 0; i < list_books.size(); i++) {
+                if (list_books.get(i).getTitle_book().indexOf(newText) != -1) {
+                    newListOfBook.add(list_books.get(i));
                 }
-                recyclerView.setAdapter(new TestAdapter(newListOfBook, token));
+                recyclerView.setAdapter(new BookAdapter(newListOfBook, token));
             }
         }
 
