@@ -23,4 +23,6 @@
     <string name="finish_btn_test">Завершить тест</string>
     <string name="Open_navigation">Открыто</string>
     <string name="Close_navigation">Закрыто</string>
+    <string name="btn_text_savedbook">Загруженные книги</string>
+    <string name="Scote_btn_text">Завершить</string>
 </resources>

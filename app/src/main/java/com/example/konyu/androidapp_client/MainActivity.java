@@ -44,6 +44,14 @@ public class MainActivity extends AppCompatActivity {
                 signin();
             }
         });
+
+        (findViewById(R.id.button_savedbooks)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), SavedBooksActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public static final String EXTRA_Token = "EXTRA_Token";

@@ -1,6 +1,8 @@
 package com.example.konyu.androidapp_client;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -27,6 +29,8 @@ public class SavedBooksActivity extends AppCompatActivity implements NavigationV
     RecyclerView recyclerView;
     String token;
     List<Book> list_books;
+    DBHelper dbHelper;
+    SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +42,29 @@ public class SavedBooksActivity extends AppCompatActivity implements NavigationV
         String Token = intent.getStringExtra(MainActivity.EXTRA_Token);
         token = Token;
         list_books = new ArrayList<>();
+
+        dbHelper = new DBHelper(this);
+        db = dbHelper.getReadableDatabase();
+        String query = "Select * FROM " + DBHelper.TABLE_BOOK;
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            int idIndex = cursor.getColumnIndex(DBHelper.BOOK_ID);
+            int titleIndex = cursor.getColumnIndex(DBHelper.BOOK_TITLE);
+            int iconIndex = cursor.getColumnIndex(DBHelper.BOOK_ICON);
+            do {
+                list_books.add(new Book(cursor.getInt(idIndex), cursor.getString(titleIndex),
+                        0, cursor.getString(iconIndex)));
+            }
+            while (cursor.moveToNext());
+        }
+
         initToolbar();
         initNavigationView();
         recyclerView = (RecyclerView) findViewById(R.id.book_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        savedBooksAdapter = new SavedBooksAdapter(this);
+        savedBooksAdapter = new SavedBooksAdapter(list_books, token);
         recyclerView.setAdapter(savedBooksAdapter);
     }
 
@@ -87,6 +109,7 @@ public class SavedBooksActivity extends AppCompatActivity implements NavigationV
                 break;
             case R.id.menu_item_save_books:
                 Intent intent2 = new Intent(this, SavedBooksActivity.class);
+                intent2.putExtra(MainActivity.EXTRA_Token, token);
                 startActivity(intent2);
                 finish();
                 break;
@@ -105,14 +128,14 @@ public class SavedBooksActivity extends AppCompatActivity implements NavigationV
     @Override
     public boolean onQueryTextChange(String newText) {
         if (newText.length() == 0 && recyclerView.getAdapter().getItemCount() != list_books.size()) {
-            recyclerView.setAdapter(new BookAdapter(list_books, token));
+            recyclerView.setAdapter(new SavedBooksAdapter(list_books, token));
         } else {
             List<Book> newListOfBook = new ArrayList<>();
             for (int i = 0; i < list_books.size(); i++) {
                 if (list_books.get(i).getTitle_book().indexOf(newText) != -1) {
                     newListOfBook.add(list_books.get(i));
                 }
-                recyclerView.setAdapter(new BookAdapter(newListOfBook, token));
+                recyclerView.setAdapter(new SavedBooksAdapter(newListOfBook, token));
             }
         }
 

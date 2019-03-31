@@ -20,30 +20,13 @@ import java.util.List;
 import model.Book;
 
 class SavedBooksAdapter extends RecyclerView.Adapter<SavedBooksAdapter.SavedBookViewHolder> {
-    SQLiteDatabase db;
-    DBHelper dbHelper;
     List<Book> books;
+
     String token;
 
-    public SavedBooksAdapter(Context context) {
-        dbHelper = new DBHelper(context);
-        db = dbHelper.getReadableDatabase();
-        String query = "Select * FROM " + DBHelper.TABLE_BOOK;
-
-        Cursor cursor = db.rawQuery(query, null);
-
-        books = new ArrayList<>();
-
-        if (cursor.moveToFirst()) {
-            int idIndex = cursor.getColumnIndex(DBHelper.BOOK_ID);
-            int titleIndex = cursor.getColumnIndex(DBHelper.BOOK_TITLE);
-            int iconIndex = cursor.getColumnIndex(DBHelper.BOOK_ICON);
-            do {
-                books.add(new Book(cursor.getInt(idIndex), cursor.getString(titleIndex),
-                        0, cursor.getString(iconIndex)));
-            }
-            while (cursor.moveToNext());
-        }
+    public SavedBooksAdapter(List<Book> books, String token) {
+        this.books = books;
+        this.token = token;
     }
 
     public class SavedBookViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -67,6 +50,7 @@ class SavedBooksAdapter extends RecyclerView.Adapter<SavedBooksAdapter.SavedBook
         public void onClick(View v) {
             Intent intent = new Intent(v.getContext(), SavedBook_Review.class);
             intent.putExtra(Book_Review.EXTRA_BOOK_ID, book_Item.getId());
+            intent.putExtra(MainActivity.EXTRA_Token, token);
             v.getContext().startActivity(intent);
         }
     }

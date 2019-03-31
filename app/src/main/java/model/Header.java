@@ -5,7 +5,7 @@ public class Header {
     private int id_book;
     private String text_header;
 
-    Header(int id, int id_book, String text_header){
+    public Header(int id, int id_book, String text_header){
         this.id = id;
         this.id_book = id_book;
         this.text_header = text_header;

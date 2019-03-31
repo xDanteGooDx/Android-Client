@@ -62,4 +62,8 @@ public interface UserClient {
 
     @GET("api/download_resource/{num}")
     Call<List<Resource>> getResource(@Header("Authorization") String auth_token, @Path("num") int num);
+
+    @POST("api/send_score/{num_test}/{num_score}")
+    Call<ResponseBody> send_score(@Header("Authorization") String auth_token, @Path("num_test") int num_test,
+                                  @Path("num_score") int num_score);
 }

@@ -124,6 +124,7 @@ public class TestActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.menu_item_save_books:
                 Intent intent2 = new Intent(this, SavedBooksActivity.class);
+                intent2.putExtra(MainActivity.EXTRA_Token, token);
                 startActivity(intent2);
                 finish();
                 break;

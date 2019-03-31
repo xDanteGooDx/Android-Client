@@ -147,6 +147,7 @@ public class Book_Review extends AppCompatActivity implements NavigationView.OnN
                 break;
             case R.id.menu_item_save_books:
                 Intent intent2 = new Intent(this, SavedBooksActivity.class);
+                intent2.putExtra(MainActivity.EXTRA_Token, token);
                 startActivity(intent2);
                 finish();
                 break;
@@ -392,6 +393,7 @@ public class Book_Review extends AppCompatActivity implements NavigationView.OnN
                                                                     });
 
                                                                     contentValues2.put(DBHelper.TEXT_HTML, path_to_file);
+                                                                    database.insert(DBHelper.TABLE_TEXT, null, contentValues2);
                                                                 }
                                                             }
                                                         }

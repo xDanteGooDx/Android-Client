@@ -23,11 +23,14 @@ import java.util.concurrent.TimeUnit;
 import model.Answer;
 import model.Question;
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.example.konyu.androidapp_client.MainActivity.userClient;
 
 public class Testing extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     RecyclerView recyclerView;
@@ -41,6 +44,7 @@ public class Testing extends AppCompatActivity implements NavigationView.OnNavig
     List<List<Answer>> answers;
     List<List<Boolean>> user_answers;
     int num_of_question; //текущий вопрос
+    int id_test;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +53,7 @@ public class Testing extends AppCompatActivity implements NavigationView.OnNavig
         setContentView(R.layout.activity_testing);
 
         Intent intent = getIntent();
-        int id_test = intent.getIntExtra(Test_Review.EXTRA_TEST_ID, 0);
+        id_test = intent.getIntExtra(Test_Review.EXTRA_TEST_ID, 0);
         token = intent.getStringExtra(MainActivity.EXTRA_Token);
 
         answers = new ArrayList<>();
@@ -65,7 +69,7 @@ public class Testing extends AppCompatActivity implements NavigationView.OnNavig
         nextBtn.setVisibility(View.GONE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        Call<List<Question>> call = MainActivity.userClient.getQuestion("token " + token, id_test);
+        Call<List<Question>> call = userClient.getQuestion("token " + token, id_test);
 
         call.enqueue(new Callback<List<Question>>() {
             @Override
@@ -78,7 +82,7 @@ public class Testing extends AppCompatActivity implements NavigationView.OnNavig
                         nextBtn.setVisibility(View.VISIBLE);
                     }
                     toolbar.setTitle("Вопрос " + Integer.toString(num_of_question + 1) + "/" + Integer.toString(questions.size()));
-                    Call<List<Answer>> call_answer = MainActivity.userClient
+                    Call<List<Answer>> call_answer = userClient
                             .getAnswer("token " + token, questions.get(num_of_question).getId());
 
                     call_answer.enqueue(new Callback<List<Answer>>() {
@@ -132,7 +136,7 @@ public class Testing extends AppCompatActivity implements NavigationView.OnNavig
 
                 title_of_test.setText(questions.get(num_of_question).getQuestion_text());
                 if (answers.size() == num_of_question) {
-                    Call<List<Answer>> call = MainActivity.userClient
+                    Call<List<Answer>> call = userClient
                             .getAnswer("token " + token, questions.get(num_of_question).getId());
 
                     call.enqueue(new Callback<List<Answer>>() {
@@ -224,8 +228,30 @@ public class Testing extends AppCompatActivity implements NavigationView.OnNavig
                     }
                 }
 
+                Call<ResponseBody> call = userClient.send_score("token " + token, id_test, score);
+
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                    }
+                });
+
                 Toast.makeText(Testing.this, "Вы ответили на " + Integer.toString(score)
                         + " из " + Integer.toString(questions.size()), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(v.getContext(), Score_Activity.class);
+                intent.putExtra(MainActivity.EXTRA_Token, token);
+                intent.putExtra(Score_Activity.EXTRA_SCORE, score);
+                intent.putExtra(Score_Activity.EXTRA_ALLSCORE, questions.size());
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -248,6 +274,7 @@ public class Testing extends AppCompatActivity implements NavigationView.OnNavig
                 break;
             case R.id.menu_item_save_books:
                 Intent intent2 = new Intent(this, SavedBooksActivity.class);
+                intent2.putExtra(MainActivity.EXTRA_Token, token);
                 startActivity(intent2);
                 finish();
                 break;
